@@ -47,6 +47,7 @@ exports.createAdmin = (req, res, next) => {
         msg: 'Registrasi Admin Berhasil!',
         user: admin,
         token: `Bearer ${token}`,
+        role: 'Admin',
       });
     })
     .catch((err) => {
@@ -109,6 +110,7 @@ exports.loginAdmin = (req, res, next) => {
             email: admin.email,
           },
           token: `Bearer ${token}`,
+          role: 'Admin',
         });
       } else {
         return res.status(401).json({

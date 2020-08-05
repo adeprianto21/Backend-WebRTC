@@ -12,7 +12,7 @@ exports.createUser = (req, res, next) => {
   if (!error.isEmpty()) {
     return res.status(422).json({
       success: false,
-      msg: 'Registrasi User Gagal!',
+      msg: error.errors[0].msg,
       errors: error.errors,
     });
   }
@@ -46,6 +46,7 @@ exports.createUser = (req, res, next) => {
         msg: 'Registrasi User Berhasil!',
         user: user,
         token: `Bearer ${token}`,
+        role: 'User',
       });
     })
     .catch((err) => {
@@ -107,6 +108,7 @@ exports.loginUser = (req, res, next) => {
             email: user.email,
           },
           token: `Bearer ${token}`,
+          role: 'User',
         });
       } else {
         return res.status(401).json({
