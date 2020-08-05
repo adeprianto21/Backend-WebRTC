@@ -45,7 +45,7 @@ exports.createAdmin = (req, res, next) => {
       return res.status(201).json({
         success: true,
         msg: 'Registrasi Admin Berhasil!',
-        admin: admin,
+        user: admin,
         token: `Bearer ${token}`,
       });
     })
@@ -102,7 +102,7 @@ exports.loginAdmin = (req, res, next) => {
         return res.json({
           success: true,
           msg: 'Login Berhasil!',
-          admin: {
+          user: {
             id: admin.id,
             name: admin.name,
             username: admin.username,
