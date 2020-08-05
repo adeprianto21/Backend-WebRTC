@@ -16,7 +16,8 @@ module.exports = {
         id: 1,
         name: 'Admin',
         username: 'admin',
-        password: '123456',
+        password:
+          '$2b$12$b/95T7PGPDj5WaP7uAt6RukboUu2hrVW/bCyKHViLnb.8HDr18VYe', // 12345678
         email: 'admin@tes.com',
       },
     ]);
