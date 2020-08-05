@@ -6,6 +6,7 @@ const passport = require('passport');
 
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
+const productRoutes = require('./routes/product');
 
 require('./config/passport')(passport);
 
@@ -22,6 +23,8 @@ app.use(passport.initialize());
 app.use('/user', userRoutes);
 
 app.use('/admin', adminRoutes);
+
+app.use('/product', productRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
