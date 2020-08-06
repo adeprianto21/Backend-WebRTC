@@ -7,6 +7,23 @@ const { generateToken } = require('../lib/jwt');
 const models = require('../models');
 const Admin = models.Admin;
 
+exports.getAdmins = (req, res, next) => {
+  Admin.findAll().then((admins) => {
+    return res
+      .json({
+        success: true,
+        msg: 'Registrasi Admin Berhasil!',
+        admins: admins,
+      })
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
+  });
+};
+
 exports.createAdmin = (req, res, next) => {
   const error = validationResult(req);
 

@@ -6,6 +6,23 @@ const models = require('../models');
 const User = models.User;
 const { generateToken } = require('../lib/jwt');
 
+exports.getUsers = (req, res, next) => {
+  User.findAll().then((users) => {
+    return res
+      .json({
+        success: true,
+        msg: 'Registrasi Admin Berhasil!',
+        users: users,
+      })
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
+  });
+};
+
 exports.createUser = (req, res, next) => {
   const error = validationResult(req);
 

@@ -1,16 +1,19 @@
 require('dotenv').config();
 
 const express = require('express');
+const app = express();
 const cors = require('cors');
 const passport = require('passport');
+const http = require('http');
+const server = http.createServer(app);
+const socket = require('socket.io');
+const io = socket(server);
 
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 const productRoutes = require('./routes/product');
 
 require('./config/passport')(passport);
-
-const app = express();
 
 app.use(cors());
 
@@ -33,6 +36,37 @@ app.use((error, req, res, next) => {
   return res.status(status).json({ success: false, msg });
 });
 
-app.listen(process.env.PORT, () => {
+const users = {};
+
+io.on('connection', (socket) => {
+  if (!users[socket.id]) {
+    users[socket.id] = socket.id;
+    console.log(`User ${socket.id} Connected`);
+  }
+
+  socket.emit('yourID', socket.id);
+
+  io.sockets.emit('allUsers', users);
+
+  socket.on('disconnect', () => {
+    console.log(`User ${socket.id} Disconnected`);
+    delete users[socket.id];
+    io.sockets.emit('allUsers', users);
+  });
+
+  socket.on('callUser', (data) => {
+    console.log('hey');
+    io.to(data.userToCall).emit('hey', {
+      signal: data.signalData,
+      from: data.from,
+    });
+  });
+
+  socket.on('acceptCall', (data) => {
+    io.to(data.to).emit('callAccepted', data.signal);
+  });
+});
+
+server.listen(process.env.PORT, () => {
   console.log(`Server is listening to port ${process.env.PORT}`);
 });

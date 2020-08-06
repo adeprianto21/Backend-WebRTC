@@ -58,4 +58,6 @@ router.post(
 
 router.post('/login', adminController.loginAdmin);
 
+router.get('/getAll', adminController.getAdmins);
+
 module.exports = router;

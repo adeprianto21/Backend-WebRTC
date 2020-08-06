@@ -59,6 +59,8 @@ router.post(
 
 router.post('/login', userController.loginUser);
 
+router.get('/getAll', userController.getUsers);
+
 router.get(
   '/test',
   function (req, res, next) {
