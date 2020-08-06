@@ -8,6 +8,9 @@ const http = require('http');
 const server = http.createServer(app);
 const socket = require('socket.io');
 const io = socket(server);
+const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
@@ -23,9 +26,36 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(passport.initialize());
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'uploads', 'images'));
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+);
+
 app.use('/user', userRoutes);
 
 app.use('/admin', adminRoutes);
+
+// app.use('/product/image', express.static(__dirname + ))
 
 app.use('/product', productRoutes);
 
